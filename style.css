@@ -1,0 +1,54 @@
+body {
+    background-color: #f2f2f2;
+    ;
+    }
+
+#board {
+    width: 294px;
+    height: 290px;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid #000;
+    margin-left: 0px;
+    margin-top: 5px;
+    }
+
+.cell {
+    float: left;
+    text-align: center;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #000;
+    }
+
+.cell:hover {
+    background-color: #f2f2f2;
+    }
+
+.cell:active {
+    background-color: #e6e6e6;
+    }
+
+.but{
+    float: left;
+    text-align: center;
+    cursor: pointer;
+    width: 42px;
+    height: 40px;
+    border: 1px solid #000;
+}
+
+.menu{
+    float: left;
+    text-align: center;
+    cursor: pointer;
+    width: 42px;
+    height: 40px;
+    border: 1px solid #000;
+    font: 20px "Times New Roman";
+}
+
+
+    
+

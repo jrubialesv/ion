@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Connect 4</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="engine_class.js"></script>
+
+</head>
+<body>
+
+
+<!-- Create a nice menu with visuals-->
+<div id="menu" >
+
+    <h1>Connect 4</h1>
+    <h2>By: Juan Rubiales</h2>
+    <h3>Instructions:</h3>
+    <p>Click on the column you want to drop your piece. <br>
+        First player to get 4 in a row wins! <br>
+        Good luck!</p>
+
+    <!-- Create a new game: -->
+    <button onclick="newGame()">New Game</button>
+
+    <!-- The game board -->
+    <div id="board" class="board" onclick="checkGameOver()"></div>
+
+    <div id="message" style="margin-left: 0px; margin-top: 5px"></div>
+</div>
+
+
+
+
+</body>
+</html>
+
