@@ -1,5 +1,3 @@
-// test
-
 class Connect4 {
     constructor() {
         this.board = [
