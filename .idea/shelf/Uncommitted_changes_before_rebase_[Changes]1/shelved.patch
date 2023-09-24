@@ -1,0 +1,305 @@
+Index: engine_class.js
+===================================================================
+diff --git a/engine_class.js b/engine_class.js
+deleted file mode 100644
+--- a/engine_class.js	(revision 90b910fd80f7291e5b1b51ba42fcb56c313324b7)
++++ /dev/null	(revision 90b910fd80f7291e5b1b51ba42fcb56c313324b7)
+@@ -1,222 +0,0 @@
+-class Connect4 {
+-    constructor() {
+-        this.board = [
+-            [0, 0, 0, 0, 0, 0, 0],
+-            [0, 0, 0, 0, 0, 0, 0],
+-            [0, 0, 0, 0, 0, 0, 0],
+-            [0, 0, 0, 0, 0, 0, 0],
+-            [0, 0, 0, 0, 0, 0, 0],
+-            [0, 0, 0, 0, 0, 0, 0]
+-        ];
+-        this.player = 1;
+-        this.winner = 0;
+-    }
+-}
+-
+-function newGame() {
+-    let game = new Connect4();
+-    // Store the object in local storage
+-    localStorage.setItem('game', JSON.stringify(game));
+-    printBoard();
+-}
+-
+-function changePlayer() {
+-    let game = JSON.parse(localStorage.getItem('game'));
+-    if (game.player === 1) {
+-        game.player = 2;
+-    }
+-    else {
+-        game.player = 1;
+-    }
+-    localStorage.setItem('game', JSON.stringify(game));
+-}
+-
+-function printBoard(column){
+-    let data = JSON.parse(localStorage.getItem('game'));
+-    // Refresh the board
+-    document.getElementById('board').innerHTML = '';
+-    // Create one button per colum with class row
+-    document.getElementById('board').innerHTML += '<div class="row"></div>';
+-    for (let i = 0; i < 7; i++) {
+-        let button = document.createElement('button');
+-        // Set name of the button
+-        button.innerHTML = i;
+-        button.setAttribute('class', 'but');
+-        button.setAttribute('onclick', 'drop(' + i + ');');
+-        document.getElementById('board').appendChild(button);
+-    }
+-    changePlayer();
+-
+-    // Create one div per row with class row
+-    for (let i = 0; i < 6; i++) {
+-        // HTML code to print the board in div board and cell
+-        document.getElementById('board').innerHTML += '<div class="row" id="row' + i + '"></div>';
+-        for (let j = 0; j < 7; j++) {
+-            document.getElementById('row' + i).innerHTML += '<div class="cell" id="cell' + i + j + '"></div>';
+-            if (data.board[i][j] === 1) {
+-                document.getElementById('cell' + i + j).style.backgroundColor = 'red';
+-            }
+-            else if (data.board[i][j] === 2) {
+-                document.getElementById('cell' + i + j).style.backgroundColor = 'yellow';
+-            }
+-        }
+-    }
+-}
+-
+-function animation(column) {
+-    let data = JSON.parse(localStorage.getItem('game'));
+-    // When a column is selected, animate the drop
+-    // get the first empty row in the column
+-    let row = 0;
+-    for (let i = 5; i >= 0 ; i--) {
+-        if (data.board[i][column] === 0) {
+-            // Change the color of the cell
+-            if (data.player === 1) {
+-                // chane background color of the cell
+-                document.getElementById('cell' + i + column).style.backgroundColor = 'yellow';
+-            }
+-            else if (data.player === 2) {
+-                // chane background color of the cell
+-                document.getElementById('cell' + i + column).style.backgroundColor = 'red';
+-            }
+-            // wait one second without doing anything
+-            setTimeout(function() {
+-                document.getElementById('cell' + i + column).style.backgroundColor = 'white';
+-                // Print the board
+-            } ,500 * i);
+-        }
+-        // Print the board
+-        if (data.board[i][column] === 1) {
+-            // chane background color of the cell
+-            document.getElementById('cell' + i + column).style.backgroundColor = 'red';
+-        }
+-        else if (data.board[i][column] === 2) {
+-            // chane background color of the cell
+-            document.getElementById('cell' + i + column).style.backgroundColor = 'yellow';
+-        }
+-    }
+-    // Save the object in local storage
+-    localStorage.setItem('game', JSON.stringify(data));
+-    // Check if there is a winner
+-    checkWinner();
+-}
+-
+-function drop(column) {
+-    // TODO: drop a piece in the given column
+-    // Find the first empty row in the given column and set it to 1
+-    // Get the game object from local storage
+-    let game = JSON.parse(localStorage.getItem('game'));
+-    // Find the first empty row in the given column
+-    for (let i = 5; i >= 0 ; i--) {
+-        if (game.board[i][column] === 0) {
+-            game.board[i][column] = game.player;
+-            break;
+-        }
+-    }
+-    // Store the object in local storage
+-    localStorage.setItem('game', JSON.stringify(game));
+-    // Print the board
+-    printBoard();
+-    animation(column);
+-}
+-
+-function checkWinner() {
+-    let data = JSON.parse(localStorage.getItem('game'));
+-    // Check if there is a winner in the board 4 in a row
+-    // Check horizontal
+-    for (let i = 0; i < 6; i++) {
+-        for (let j = 0; j < 4; j++) {
+-            if (data.board[i][j] === data.player && data.board[i][j + 1] === data.player && data.board[i][j + 2] === data.player && data.board[i][j + 3] === data.player) {
+-                data.winner = data.player;
+-            }
+-        }
+-    }
+-    // Check vertical
+-    for (let i = 0; i < 3; i++) {
+-        for (let j = 0; j < 7; j++) {
+-            if (data.board[i][j] === data.player && data.board[i + 1][j] === data.player && data.board[i + 2][j] === data.player && data.board[i + 3][j] === data.player) {
+-                data.winner = data.player;
+-            }
+-        }
+-    }
+-    // Check diagonal
+-    for (let i = 0; i < 3; i++) {
+-        for (let j = 0; j < 4; j++) {
+-            if (data.board[i][j] === data.player && data.board[i + 1][j + 1] === data.player && data.board[i + 2][j + 2] === data.player && data.board[i + 3][j + 3] === data.player) {
+-                data.winner = data.player;
+-            }
+-        }
+-    }
+-    // Check diagonal
+-    for (let i = 3; i < 6; i++) {
+-        for (let j = 0; j < 4; j++) {
+-            if (data.board[i][j] === data.player && data.board[i - 1][j + 1] === data.player && data.board[i - 2][j + 2] === data.player && data.board[i - 3][j + 3] === data.player) {
+-                data.winner = data.player;
+-            }
+-        }
+-    }
+-
+-    // Store the object in local storage
+-    localStorage.setItem('game', JSON.stringify(data));
+-}
+-
+-function checkDraw() {
+-    let data = JSON.parse(localStorage.getItem('game'));
+-    // Check if there is a draw
+-    let draw = true;
+-    for (let i = 0; i < 6; i++) {
+-        for (let j = 0; j < 7; j++) {
+-            if (data.board[i][j] === 0) {
+-                draw = false;
+-            }
+-        }
+-    }
+-    if (draw) {
+-        data.winner = 3;
+-    }
+-    // Store the object in local storage
+-    localStorage.setItem('game', JSON.stringify(data));
+-}
+-
+-function checkGameOver() {
+-    let data = JSON.parse(localStorage.getItem('game'));
+-    // Check if the game is over
+-    if (data.winner === 0) {
+-        checkWinner();
+-        checkDraw();
+-    }
+-    if (data.winner === 1) {
+-        document.getElementById('message').innerHTML = 'Red player wins!';
+-        // Reset the game
+-        resetGame();
+-    }
+-    else if (data.winner === 2) {
+-        document.getElementById('message').innerHTML = 'Yellow player wins!';
+-        // Reset the game
+-        resetGame();
+-    }
+-    else if (data.winner === 3) {
+-        document.getElementById('message').innerHTML = 'Draw!';
+-        // Reset the game
+-        resetGame();
+-    }
+-}
+-
+-function resetGame() {
+-    // Reset the game
+-    let data = JSON.parse(localStorage.getItem('game'));
+-    // Reset the board
+-    for (let i = 0; i < 6; i++) {
+-        for (let j = 0; j < 7; j++) {
+-            data.board[i][j] = 0;
+-        }
+-    }
+-    // Reset the player
+-    data.player = 1;
+-    // Reset the winner
+-    data.winner = 0;
+-    // Store the object in local storage
+-    localStorage.setItem('game', JSON.stringify(data));
+-    // Print the board
+-    printBoard();
+-}
+Index: .idea/vcs.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+new file mode 100644
+--- /dev/null	(date 1695359627189)
++++ b/.idea/vcs.xml	(date 1695359627189)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="VcsDirectoryMappings">
++    <mapping directory="" vcs="Git" />
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/.gitignore
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/.gitignore b/.idea/.gitignore
+new file mode 100644
+--- /dev/null	(date 1695359627190)
++++ b/.idea/.gitignore	(date 1695359627190)
+@@ -0,0 +1,5 @@
++# Default ignored files
++/shelf/
++/workspace.xml
++# Editor-based HTTP Client requests
++/httpRequests/
+Index: .idea/ion.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/ion.iml b/.idea/ion.iml
+new file mode 100644
+--- /dev/null	(date 1695359627190)
++++ b/.idea/ion.iml	(date 1695359627190)
+@@ -0,0 +1,12 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<module type="WEB_MODULE" version="4">
++  <component name="NewModuleRootManager">
++    <content url="file://$MODULE_DIR$">
++      <excludeFolder url="file://$MODULE_DIR$/.tmp" />
++      <excludeFolder url="file://$MODULE_DIR$/temp" />
++      <excludeFolder url="file://$MODULE_DIR$/tmp" />
++    </content>
++    <orderEntry type="inheritedJdk" />
++    <orderEntry type="sourceFolder" forTests="false" />
++  </component>
++</module>
+\ No newline at end of file
+Index: .idea/modules.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/modules.xml b/.idea/modules.xml
+new file mode 100644
+--- /dev/null	(date 1695359627191)
++++ b/.idea/modules.xml	(date 1695359627191)
+@@ -0,0 +1,8 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="ProjectModuleManager">
++    <modules>
++      <module fileurl="file://$PROJECT_DIR$/.idea/ion.iml" filepath="$PROJECT_DIR$/.idea/ion.iml" />
++    </modules>
++  </component>
++</project>
+\ No newline at end of file
+diff --git a/test.js b/test.js
+new file mode 100644
